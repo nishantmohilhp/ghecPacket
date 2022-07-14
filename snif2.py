@@ -7,7 +7,7 @@ import textwrap
 import binascii
 import struct
 import sys
-from scapy.all import sniff, TCP, IP
+
 TAB_1 = '\t - '
 TAB_2 = '\t\t - '
 TAB_3 = '\t\t\t - '
@@ -60,8 +60,6 @@ def main():
 #            if sys .argv[1] == f[0]:
 #               filter = f
 
-
-    sniff(filter='tcp port 110 or tcp port 25 or tcp port 143', prn=packet_callback, store=0)
     while nopc <= numOfpacTotal:
         raw_data, addr = conn.recvfrom(65536)
         dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
@@ -333,13 +331,6 @@ def format_output_line(prefix, string):
         if size % 2:
             size-= 1
             return '\n'.join([prefix + line for line in textwrap.wrap(string, size)])
-
-def packet_callback(packet):
-    if packet[TCP].payload:
-        mypacket = str(packet[TCP].payload)
-        if 'user' in mypacket.lower() or 'pass' in mypacket.lower():
-         print(f"[*] Destination: {packet[IP].dst}")
-         print(f"[*] {str(packet[TCP].payload)}")
 
 if starInput == 1:
     print('Please enter the number Of packet you want to sniff')
